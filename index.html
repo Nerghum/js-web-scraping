@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Scraper by nNerghum</title>
+</head>
+<body>
+    <h1>Web Scraper</h1>
+    <form id="scrapeForm">
+        <label for="url">Enter URL:</label>
+        <input type="url" id="url" required>
+        <label for="selector">Enter Section ID or Class:</label>
+        <input type="text" id="selector" required>
+        <button type="submit">Scrape Content</button>
+    </form>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById("scrapeForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            
+            const url = document.getElementById("url").value;
+            const selector = document.getElementById("selector").value;
+            const resultDiv = document.getElementById("result");
+
+            // Fetch the web page
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    // Create a temporary div to parse the HTML
+                    const tempDiv = document.createElement("div");
+                    tempDiv.innerHTML = html;
+
+                    // Find the desired element using the selector (ID or class)
+                    const element = tempDiv.querySelector(selector);
+
+                    if (element) {
+                        // Display the scraped content inside the result div
+                        resultDiv.innerHTML = element.innerHTML;
+                    } else {
+                        resultDiv.innerHTML = "Element not found. Please check your selector.";
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = "Error: " + error.message;
+                });
+        });
+    </script>
+</body>
+</html>
